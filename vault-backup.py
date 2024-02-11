@@ -89,5 +89,5 @@ subprocess.run([r'cmd', r'/c', 'rmdir', r'/S', r'/Q', os.path.join(wd, r'Backups
 subprocess.run([r'cmd', r'/c', 'del', r'/Q', tar_loc_fullname])
 subprocess.run([r'cmd', r'/c', 'del', r'/Q', log_path])
 logging.debug("Temp Files cleared.")
-logging.debug("Success.")
+logging.info("Success.")
 send_report_and_exit()
