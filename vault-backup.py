@@ -16,8 +16,9 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
     s3.upload_file(loc_file, s3_b, rem_file)
 
 
-bk_cmd = r'"C:\Program Files\Autodesk\Vault Server 2024\ADMS Console\Connectivity.ADMSConsole.exe" ' \
-         fr'-Obackup -B{wd}\Backups -VUAdministrator  -VPCAD70_Inventor+ -S -L{wd}\VaultBackupLog.txt'
+bk_cmd = [os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe'),
+            fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', '-VPCAD70_Inventor+', '-S',
+            fr'-L{wd}\VaultBackupLog.txt']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
