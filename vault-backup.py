@@ -25,7 +25,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "-d":
 
 try:
     print("ADMSConsole Backup...")
-    c = subprocess.run([bk_cmd], cwd=wd)
+    c = subprocess.run(bk_cmd, cwd=wd)
     print("Tar...")
     c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
