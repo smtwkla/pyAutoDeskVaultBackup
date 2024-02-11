@@ -8,11 +8,6 @@ import botocore.exceptions
 from secrets import *
 
 
-def execute_vault_backup(cmd, workdir):
-    c = subprocess.run([cmd], cwd=workdir)
-    c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
-
-
 def upload_to_s3bucket(loc_file, s3_b, rem_file):
     print(f"Uploading {loc_file} to s3://{s3_b}/{rem_file}...")
 
@@ -28,7 +23,10 @@ if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
 
 try:
-    execute_vault_backup(bk_cmd, wd)
+    print("ADMSConsole Backup...")
+    c = subprocess.run([bk_cmd], cwd=wd)
+    print("Tar...")
+    c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
     print(e)
     exit(-1)
