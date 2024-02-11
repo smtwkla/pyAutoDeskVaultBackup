@@ -18,7 +18,7 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
 
 bk_cmd = r'"C:\Program Files\Autodesk\Vault Server 2024\ADMS Console\Connectivity.ADMSConsole.exe" ' \
          fr'-Obackup -B{wd}\Backups -VUAdministrator  -VPCAD70_Inventor+ -S -L{wd}\VaultBackupLog.txt'
-print(f"Executing {bk_cmd}...")
+
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
 
@@ -29,10 +29,6 @@ try:
     c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
     print(e)
-    exit(-1)
-
-if r != 0:
-    print(f"Error executing vault backup command. {r}")
     exit(-1)
 
 n = datetime.datetime.now().strftime("%Y_%m_%d_%H_")
