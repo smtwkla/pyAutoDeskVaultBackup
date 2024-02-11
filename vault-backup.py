@@ -19,8 +19,9 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
 
 adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
 log_path = os.path.join(wd, "VaultBackupLog.txt")
-bk_cmd = [f'"{adms}"', fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S',
-          log_path]
+bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S',
+          f'-L{log_path}']
+
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
