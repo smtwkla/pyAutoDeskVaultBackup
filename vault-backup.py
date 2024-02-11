@@ -17,7 +17,7 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
 
 
 adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
-bk_cmd = [f'"{adms}"', fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', '-VPCAD70_Inventor+', '-S',
+bk_cmd = [f'"{adms}"', fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S',
           fr'-L{wd}\VaultBackupLog.txt']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
