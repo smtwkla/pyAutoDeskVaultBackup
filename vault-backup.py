@@ -27,7 +27,7 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
 
 
 bk_cmd = r'"C:\Program Files\Autodesk\Vault Server 2024\ADMS Console\Connectivity.ADMSConsole.exe" ' \
-         r'-Obackup -BC:\Backup\Backups -VUAdministrator  -VPCAD70_Inventor+ -S -LC:\Backup\BackupLog.txt'
+         r'-Obackup -BC:\Backup\Backups -VUAdministrator  -VPCAD70_Inventor+ -S -LC:\Backup\VaultBackupLog.txt'
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
 
@@ -38,12 +38,17 @@ if execute_vault_backup(bk_cmd, wd) !=0:
 n = datetime.datetime.now().strftime("%Y_%m_%d_%H_")
 tar_rem_name = f'vault_backup_{n}.tar.gz'
 tar_loc_fullname = os.path.join(wd, 'backups.tar.gz')
+log_rem_name = f'VaultBackupLog.txt'
+log_loc_fullname = os.path.join(wd, 'VaultBackupLog.txt')
+
 
 try:
     upload_to_s3bucket(tar_loc_fullname, s3_bucket, tar_rem_name)
+    upload_to_s3bucket(log_loc_fullname, s3_bucket, log_rem_name)
 except (WindowsError, botocore.exceptions.BotoCoreError, botocore.exceptions.ClientError) as e:
     print('Error occurred.\n', e)
     exit(-1)
 
 print("Uploaded to S3.")
-subprocess.run([r'cmd', r'/c', 'del', r'/Q', r'C:\backup\backups.tar.gz'])
+subprocess.run([r'cmd', r'/c', 'del', r'/Q', os.path.join(wd, r'backups.tar.gz')])
+subprocess.run([r'cmd', r'/c', 'del', r'/Q', os.path.join(wd, r'VaultBackupLog.txt')])
