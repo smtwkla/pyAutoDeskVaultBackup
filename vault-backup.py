@@ -9,12 +9,8 @@ from secrets import *
 
 
 def execute_vault_backup(cmd, workdir):
-    try:
-        c = subprocess.run([cmd], cwd=workdir)
-        c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
-        return c.returncode
-    except Exception as e:
-        return -1
+    c = subprocess.run([cmd], cwd=workdir)
+    c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 
 
 def upload_to_s3bucket(loc_file, s3_b, rem_file):
@@ -31,7 +27,12 @@ print(f"Executing {bk_cmd}...")
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
 
-r = execute_vault_backup(bk_cmd, wd)
+try:
+    execute_vault_backup(bk_cmd, wd)
+except Exception as e:
+    print(e)
+    exit(-1)
+
 if r != 0:
     print(f"Error executing vault backup command. {r}")
     exit(-1)
