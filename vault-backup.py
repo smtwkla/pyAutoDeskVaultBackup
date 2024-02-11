@@ -24,10 +24,8 @@ def setup_logging():
 
 
 def upload_to_s3bucket(loc_file, s3_b, rem_file):
-    print(f"Uploading {loc_file} to s3://{s3_b}/{rem_file}...")
-
+    logging.info(f"Uploading {loc_file} to s3://{s3_b}/{rem_file}...")
     s3 = boto3.client('s3', aws_access_key_id=s3_access_key_id, aws_secret_access_key=s3_secret_access_key)
-
     s3.upload_file(loc_file, s3_b, rem_file)
 
 
@@ -37,6 +35,7 @@ def send_report_and_exit():
     with open(VAULTBACKUP_LOG_FILENAME, 'r') as fl:
         log_content = fl.read()
 
+    log_content = log_content.encode('ascii','ignore').decode('ascii')
     msg = f"""From: {email_secrets.SMTP_USER}
     To: {email_secrets.SMTP_SEND_TO} 
     Subject: Autodesk Vault Backup Report {datetime.datetime.now().strftime("%Y-%m-%d")}
