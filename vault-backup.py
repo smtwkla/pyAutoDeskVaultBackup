@@ -21,6 +21,8 @@ def setup_logging():
     subprocess.run([r'cmd', r'/c', 'del', r'/Q', VAULTBACKUP_LOG_FILENAME])
     logging.basicConfig(format='%(asctime)s %(message)s', filename=VAULTBACKUP_LOG_FILENAME, encoding='utf-8',
                         level=logging.INFO)
+    console = logging.StreamHandler()
+    logging.getLogger().addHandler(console)
 
 
 def upload_to_s3bucket(loc_file, s3_b, rem_file):
@@ -29,7 +31,7 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
     s3.upload_file(loc_file, s3_b, rem_file)
 
 
-def send_report_and_exit():
+def send_report_and_exit(rc=0):
     logging.getLogger().handlers[0].flush()
 
     with open(VAULTBACKUP_LOG_FILENAME, 'r') as fl:
@@ -37,13 +39,13 @@ def send_report_and_exit():
 
     log_content = log_content.encode('ascii','ignore').decode('ascii')
     msg = f"""From: {email_secrets.SMTP_USER}
-    To: {email_secrets.SMTP_SEND_TO} 
-    Subject: Autodesk Vault Backup Report {datetime.datetime.now().strftime("%Y-%m-%d")}
+To: {email_secrets.SMTP_SEND_TO} 
+Subject: Autodesk Vault Backup Report {datetime.datetime.now().strftime("%Y-%m-%d")}
 
-    {log_content}
+{log_content}
     """
     send_email_rep.send_mail(msg)
-    exit(-1)
+    exit(rc)
 
 
 adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
@@ -67,7 +69,7 @@ try:
     c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
     logging.exception(f"Error running {bk_cmd}.")
-    send_report_and_exit()
+    send_report_and_exit(-1)
 
 n = datetime.datetime.now().strftime("%Y_%m_%d_%H_")
 tar_rem_name = f'vault_backup_{n}.tar.gz'
@@ -78,10 +80,9 @@ log_rem_name = f'VaultBackupADMSLog.txt'
 try:
     upload_to_s3bucket(tar_loc_fullname, s3_bucket, tar_rem_name)
     upload_to_s3bucket(log_path, s3_bucket, log_rem_name)
-    pass
 except (WindowsError, botocore.exceptions.BotoCoreError, botocore.exceptions.ClientError) as e:
     logging.exception('Error occurred during S3 Upload.')
-    send_report_and_exit()
+    send_report_and_exit(-1)
 
 logging.info(f"Uploaded {log_rem_name} to S3.")
 subprocess.run([r'cmd', r'/c', 'rmdir', r'/S', r'/Q', os.path.join(wd, r'Backups')])
