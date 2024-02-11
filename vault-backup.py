@@ -16,9 +16,9 @@ def upload_to_s3bucket(loc_file, s3_b, rem_file):
     s3.upload_file(loc_file, s3_b, rem_file)
 
 
-bk_cmd = [os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe'),
-            fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', '-VPCAD70_Inventor+', '-S',
-            fr'-L{wd}\VaultBackupLog.txt']
+adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
+bk_cmd = [f'"{adms}"', fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', '-VPCAD70_Inventor+', '-S',
+          fr'-L{wd}\VaultBackupLog.txt']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
     bk_cmd = os.path.join(wd, "dummybackup.bat")
@@ -37,7 +37,6 @@ tar_rem_name = f'vault_backup_{n}.tar.gz'
 tar_loc_fullname = os.path.join(wd, 'backups.tar.gz')
 log_rem_name = f'VaultBackupLog.txt'
 log_loc_fullname = os.path.join(wd, 'VaultBackupLog.txt')
-
 
 try:
     upload_to_s3bucket(tar_loc_fullname, s3_bucket, tar_rem_name)
