@@ -3,3 +3,4 @@
 secrets.py
 test.txt
 vault-backup.log.txt
+email_secrets.py
