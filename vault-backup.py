@@ -4,6 +4,7 @@ import subprocess
 import datetime
 import boto3
 import botocore.exceptions
+import traceback
 
 from secrets import *
 
@@ -29,7 +30,7 @@ try:
     print("Tar...")
     c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
-    print(e)
+    traceback.print_exc()
     exit(-1)
 
 n = datetime.datetime.now().strftime("%Y_%m_%d_%H_")
