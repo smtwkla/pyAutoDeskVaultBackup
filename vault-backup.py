@@ -38,8 +38,9 @@ def send_report_and_exit(rc=0):
         log_content = fl.read()
 
     log_content = log_content.encode('ascii','ignore').decode('ascii')
+
     msg = f"""From: {email_secrets.SMTP_USER}
-To: {email_secrets.SMTP_SEND_TO} 
+To: {', '.join(email_secrets.SMTP_SEND_TO)} 
 Subject: Autodesk Vault Backup Report {datetime.datetime.now().strftime("%Y-%m-%d")}
 
 {log_content}
