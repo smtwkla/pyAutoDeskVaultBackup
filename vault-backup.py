@@ -49,5 +49,6 @@ except (WindowsError, botocore.exceptions.BotoCoreError, botocore.exceptions.Cli
     exit(-1)
 
 print("Uploaded to S3.")
+subprocess.run([r'cmd', r'/c', 'rmdir', r'/S', r'/Q', os.path.join(wd, r'Backups')])
 subprocess.run([r'cmd', r'/c', 'del', r'/Q', os.path.join(wd, r'backups.tar.gz')])
 subprocess.run([r'cmd', r'/c', 'del', r'/Q', os.path.join(wd, r'VaultBackupLog.txt')])
