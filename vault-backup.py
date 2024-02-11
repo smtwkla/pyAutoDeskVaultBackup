@@ -11,11 +11,8 @@ from secrets import *
 def execute_vault_backup(cmd, workdir):
     try:
         c = subprocess.run([cmd], cwd=workdir)
-        print(c.returncode)
-        if c.returncode == 0:
-            c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
-            print(c.returncode)
-            return c.returncode
+        c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
+        return c.returncode
     except Exception as e:
         return -1
 
