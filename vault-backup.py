@@ -49,12 +49,18 @@ Subject: Autodesk Vault Backup Report {datetime.datetime.now().strftime("%Y-%m-%
     exit(rc)
 
 
+def human_size(bytes, units=[' bytes','KB','MB','GB','TB', 'PB', 'EB']):
+    """ Returns a human readable string representation of bytes """
+    return str(bytes) + units[0] if bytes < 1024 else human_size(bytes>>10, units[1:])
+
+
 adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
 log_path = os.path.join(wd, ADMS_LOG_FILENAME)
 bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S',
           f'-L{log_path}']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
+    #used for debuging and dev purpose, without invoking the actual ADMSConsole
     bk_cmd = [os.path.join(wd, "dummybackup.bat")]
     ADMSConsolePath = os.path.join(wd)
 
@@ -77,6 +83,11 @@ tar_rem_name = f'vault_backup_{n}.tar.gz'
 tar_loc_fullname = os.path.join(wd, 'backups.tar.gz')
 log_rem_name = f'VaultBackupADMSLog.txt'
 
+try:
+    fs = human_size(os.path.getsize(tar_loc_fullname))
+    logging.info(f'Backup tar file {tar_rem_name} is {fs}')
+except Exception as e:
+    pass
 
 try:
     upload_to_s3bucket(tar_loc_fullname, s3_bucket, tar_rem_name)
