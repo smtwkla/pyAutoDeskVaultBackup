@@ -50,13 +50,13 @@ Subject: Autodesk Vault Backup Report {datetime.datetime.now().strftime("%Y-%m-%
 
 
 def human_size(bytes, units=[' bytes','KB','MB','GB','TB', 'PB', 'EB']):
-    """ Returns a human readable string representation of bytes """
+    """ Returns a human-readable string representation of bytes """
     return str(bytes) + units[0] if bytes < 1024 else human_size(bytes>>10, units[1:])
 
 
 adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
 log_path = os.path.join(wd, ADMS_LOG_FILENAME)
-bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S',
+bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S', '-VAL'
           f'-L{log_path}']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
@@ -70,8 +70,11 @@ try:
     logging.info("Running ADMSConsole Backup...")
     c = subprocess.run(bk_cmd, cwd=ADMSConsolePath)
     logging.info("ADMSConsole Backup Complete. Logfile Contents:")
-    with open(log_path, "r") as f:
-        logging.info(f.read())
+    try:
+        with open(log_path, "r") as f:
+            logging.info(f.read())
+    except FileNotFoundError:
+        logging.critical('<Could not find log file.>')
     logging.info("Running tar...")
     c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
