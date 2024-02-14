@@ -56,7 +56,7 @@ def human_size(bytes, units=[' bytes','KB','MB','GB','TB', 'PB', 'EB']):
 
 adms = os.path.join(ADMSConsolePath, 'Connectivity.ADMSConsole.exe')
 log_path = os.path.join(wd, ADMS_LOG_FILENAME)
-bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S', '-VAL',
+bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPassword}', '-S',
           f'-L{log_path}']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
