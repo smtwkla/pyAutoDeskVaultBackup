@@ -68,8 +68,10 @@ setup_logging()
 
 try:
     logging.info("Running ADMSConsole Backup...")
-    c = subprocess.run(bk_cmd, cwd=ADMSConsolePath)
-    logging.info("ADMSConsole Backup Complete. Logfile Contents:")
+    c = subprocess.run(bk_cmd, cwd=ADMSConsolePath, capture_output=True)
+    logging.info(f"ADMSConsole Backup Complete with exit code {c.returncode}.")
+    logging.info(f"{c.stderr.decode('ascii')}")
+    logging.info(f"Logfile Contents:")
     try:
         with open(log_path, "r") as f:
             logging.info(f.read())
