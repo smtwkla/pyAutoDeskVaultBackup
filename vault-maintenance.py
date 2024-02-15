@@ -1,16 +1,12 @@
-import os.path
 import sys
 import subprocess
 import datetime
-import boto3
-import botocore.exceptions
 import logging
 
 import email_secrets
 import send_email_rep
 
-from secrets import *
-from settings import *
+
 
 
 # Maintenance plan for SQL Server Express based Vault
@@ -36,8 +32,8 @@ def exec_sql_cmd(sql_cli, cmd):
     except Exception as e:
         logging.error(f"Error running command.")
     else:
-        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output: )')
-        logging.info(f'{rc.stdout.decode("ascii")}\n{rc.stderr.decode("ascii")}')
+        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output:\n{rc.stdout.decode("ascii")}"'
+                     f'"\n{rc.stderr.decode("ascii")}')
 
 
 def send_report_and_exit(rc=0):
@@ -69,7 +65,7 @@ else:
     logging.error("No Vault name specified.")
     exit(-1)
 
-sql_cmd =['sqlcmd', '-E', '-S', ".\AutodeskVault", '-Q']
+sql_cmd =['sqlcmd', '-E', '-S', r".\AutodeskVault", '-Q']
 
 # Setting {VaultName} database compatibility to 110
 compat_q = f"ALTER DATABASE {VaultName} SET COMPATIBILITY_LEVEL = 110"
