@@ -1,3 +1,4 @@
+import os.path
 import sys
 import subprocess
 import datetime
@@ -32,8 +33,8 @@ def exec_sql_cmd(sql_cli, cmd):
     except Exception as e:
         logging.error(f"Error running command.")
     else:
-        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output:\n{rc.stdout.decode("ascii")}"'
-                     f'"\n{rc.stderr.decode("ascii")}')
+        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output: )')
+        logging.info(f'{rc.stdout.decode("ascii")}\n{rc.stderr.decode("ascii")}')
 
 
 def send_report_and_exit(rc=0):
