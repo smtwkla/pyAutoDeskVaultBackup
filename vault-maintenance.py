@@ -7,9 +7,6 @@ import logging
 import email_secrets
 import send_email_rep
 
-
-
-
 # Maintenance plan for SQL Server Express based Vault
 # Invoke as : VaultBackup.bat Name of Vault
 # include [], only one vault at a time
@@ -33,8 +30,8 @@ def exec_sql_cmd(sql_cli, cmd):
     except Exception as e:
         logging.error(f"Error running command.")
     else:
-        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output:')
-        logging.info(f'{rc.stdout.decode("ascii")}\n{rc.stderr.decode("ascii")}')
+        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output:'
+                     f'{rc.stdout.decode("ascii")}\n{rc.stderr.decode("ascii")}')
 
 
 def send_report_and_exit(rc=0):
@@ -43,7 +40,7 @@ def send_report_and_exit(rc=0):
     with open(VAULT_MAINT_LOG_FILENAME, 'r') as fl:
         log_content = fl.read()
 
-    log_content = log_content.encode('ascii','ignore').decode('ascii')
+    log_content = log_content.encode('ascii', 'ignore').decode('ascii')
 
     msg = f"""From: {email_secrets.SMTP_USER}
 To: {', '.join(email_secrets.SMTP_SEND_TO)} 
@@ -59,14 +56,14 @@ setup_logging()
 
 if len(sys.argv) > 1:
     vn = " ".join(sys.argv[1:])
-    VaultName=f'[{vn}]'
-    VaultLog=f'[{vn}_log]'
+    VaultName = f'[{vn}]'
+    VaultLog = f'[{vn}_log]'
     logging.info(f"Vault Name: {VaultName}, Vault Log Name: {VaultLog}")
 else:
     logging.error("No Vault name specified.")
     exit(-1)
 
-sql_cmd =['sqlcmd', '-E', '-S', r".\AutodeskVault", '-Q']
+sql_cmd = ['sqlcmd', '-E', '-S', r".\AutodeskVault", '-Q']
 
 # Setting {VaultName} database compatibility to 110
 compat_q = f"ALTER DATABASE {VaultName} SET COMPATIBILITY_LEVEL = 110"
@@ -85,10 +82,10 @@ auto_close_q = f"ALTER DATABASE {VaultName} SET AUTO_CLOSE OFF WITH NO_WAIT"
 
 # Reindexing {VaultName} database...
 reindex_q = f"USE {VaultName} " \
-            "DECLARE tableCursor CURSOR FOR "\
-            "SELECT NAME FROM sysobjects WHERE xtype in('U') "\
-            "DECLARE @tableName nvarchar(128) OPEN tableCursor FETCH NEXT FROM tableCursor INTO @tableName "\
-            "WHILE @@FETCH_STATUS = 0 "\
+            "DECLARE tableCursor CURSOR FOR " \
+            "SELECT NAME FROM sysobjects WHERE xtype in('U') " \
+            "DECLARE @tableName nvarchar(128) OPEN tableCursor FETCH NEXT FROM tableCursor INTO @tableName " \
+            "WHILE @@FETCH_STATUS = 0 " \
             "BEGIN DBCC DBREINDEX(@tableName, '') FETCH NEXT FROM tableCursor INTO @tableName END " \
             "CLOSE tableCursor DEALLOCATE tableCursor"
 
