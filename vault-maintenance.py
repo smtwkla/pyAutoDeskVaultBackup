@@ -33,7 +33,7 @@ def exec_sql_cmd(sql_cli, cmd):
     except Exception as e:
         logging.error(f"Error running command.")
     else:
-        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output: )')
+        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output:')
         logging.info(f'{rc.stdout.decode("ascii")}\n{rc.stderr.decode("ascii")}')
 
 
