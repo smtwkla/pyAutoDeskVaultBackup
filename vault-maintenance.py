@@ -31,7 +31,13 @@ def setup_logging():
 def exec_sql_cmd(sql_cli, cmd):
     ex_cmd = [*sql_cli, cmd]
     logging.info(f"Executing SQL {' '.join(ex_cmd)}")
-    subprocess.run(ex_cmd)
+    try:
+        rc = subprocess.run(ex_cmd, capture_output=True)
+    except Exception as e:
+        logging.error(f"Error running command.")
+    else:
+        logging.info(f'Command Complete with exit code {rc.returncode}. Command Output: )')
+        logging.info(f'{rc.stdout.decode("ascii")}\n{rc.stderr.decode("ascii")}')
 
 
 def send_report_and_exit(rc=0):
@@ -96,3 +102,5 @@ q_list = [compat_q, rec_q, autogrow_q, dblog_q, auto_close_q, reindex_q, update_
 
 for q in q_list:
     exec_sql_cmd(sql_cmd, q)
+
+send_report_and_exit()
