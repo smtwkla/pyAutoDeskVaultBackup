@@ -3,5 +3,5 @@
 __pycache__/*
 secrets.py
 test.txt
-vault-backup.log.txt
+*.log.txt
 email_secrets.py
