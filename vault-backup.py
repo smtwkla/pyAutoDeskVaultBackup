@@ -68,7 +68,7 @@ setup_logging()
 
 try:
     logging.info("Running ADMSConsole Backup...")
-    logging.info(" ".join(bk_cmd))
+    #logging.info(" ".join(bk_cmd))
     c = subprocess.run(bk_cmd, cwd=ADMSConsolePath, capture_output=True)
     logging.info(f"ADMSConsole Backup Complete with exit code {c.returncode}.")
     logging.info(f"{c.stderr.decode('ascii')}")
@@ -77,11 +77,12 @@ try:
         with open(log_path, "r") as f:
             logging.info(f.read())
     except FileNotFoundError:
-        logging.critical('<Could not find log file.>')
+        logging.critical('<Could not find log file. Backup probably did not run. Aborting.>')
+        send_report_and_exit(-1)
     logging.info("Running tar...")
     c = subprocess.run([r'tar', r'zcf', 'backups.tar.gz', 'Backups'], cwd=wd)
 except Exception as e:
-    logging.exception(f"Error running {bk_cmd}.")
+    logging.exception(f"Error running backup command.")
     send_report_and_exit(-1)
 
 n = datetime.datetime.now().strftime("%Y_%m_%d_%H_")
