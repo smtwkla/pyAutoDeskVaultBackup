@@ -48,6 +48,7 @@ def setup_logging():
 
 
 setup_logging()
+logging.info('Starting Vault Log Rotation...')
 s3 = boto3.client('s3', aws_access_key_id=s3_access_key_id, aws_secret_access_key=s3_secret_access_key)
 s3_contents = s3.list_objects_v2(Bucket=s3_bucket, Prefix=s3_prefix)
 
@@ -67,3 +68,7 @@ for file in backup_files:
         file.delete(s3)
     else:
         logging.debug(f'File {file} retained.')
+
+logging.info("Completed rotating backup files.")
+logging.getLogger().handlers[0].flush()
+s3.upload_file(VAULT_ROTATE_LOG_FILENAME, s3_bucket, VAULT_ROTATE_LOG_FILENAME)
