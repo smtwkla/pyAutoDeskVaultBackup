@@ -60,7 +60,7 @@ bk_cmd = [adms, fr'-Obackup', fr'-B{wd}\Backups', '-VUAdministrator', f'-VP{VPas
           f'-L{log_path}']
 
 if len(sys.argv) > 1 and sys.argv[1] == "-d":
-    #used for debuging and dev purpose, without invoking the actual ADMSConsole
+    # used for debugging and dev purpose, without invoking the actual ADMSConsole
     bk_cmd = [os.path.join(wd, "dummybackup.bat")]
     ADMSConsolePath = os.path.join(wd)
 
@@ -68,7 +68,6 @@ setup_logging()
 
 try:
     logging.info("Running ADMSConsole Backup...")
-    #logging.info(" ".join(bk_cmd))
     c = subprocess.run(bk_cmd, cwd=ADMSConsolePath, capture_output=True)
     logging.info(f"ADMSConsole Backup Complete with exit code {c.returncode}.")
     logging.info(f"{c.stderr.decode('ascii')}")
@@ -85,8 +84,8 @@ except Exception as e:
     logging.exception(f"Error running backup command.")
     send_report_and_exit(-1)
 
-n = datetime.datetime.now().strftime("%Y_%m_%d_%H_")
-tar_rem_name = f'vault_backup_{n}.tar.gz'
+n = datetime.datetime.now().strftime(BACKUP_FILE_TIME_FORMAT)
+tar_rem_name = f'{BACKUP_FILE_PREFIX}{n}{BACKUP_FILE_SUFFIX}'
 tar_loc_fullname = os.path.join(wd, 'backups.tar.gz')
 log_rem_name = f'VaultBackupADMSLog.txt'
 
