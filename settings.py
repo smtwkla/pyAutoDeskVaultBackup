@@ -1,5 +1,5 @@
 wd = "c:\\backup\\vault"
-ADMSConsolePath = 'C:\\Program Files\\Autodesk\\Vault Server 2024\\ADMS Console'
+ADMSConsolePath = 'C:\\Program Files\\Autodesk\\Vault Server 2025\\ADMS Console' # Vault Server 2024: Change path
 BACKUP_FILE_PREFIX = 'vault_backup_'
 BACKUP_FILE_SUFFIX = '.tar.gz'
 BACKUP_FILE_TIME_FORMAT = "%Y_%m_%d_%H_"
